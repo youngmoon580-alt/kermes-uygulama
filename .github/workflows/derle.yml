@@ -1,0 +1,73 @@
+name: Uygulamaları derle
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Windows kurulum dosyası
+        working-directory: electron
+        run: |
+          npm install
+          npm run dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: electron/dist/Kermes-Defterim-Kurulum.exe
+
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: android-actions/setup-android@v3
+      - name: Anahtar dosyasını hazırla
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > "$RUNNER_TEMP/kermes.jks"
+      - name: APK derle
+        working-directory: android
+        env:
+          KEYSTORE_FILE: ${{ runner.temp }}/kermes.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: kermes
+          KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          VERSION_CODE: ${{ github.run_number }}
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon assembleRelease
+      - name: APK adını düzenle
+        run: cp android/app/build/outputs/apk/release/app-release.apk Kermes-Defterim.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: Kermes-Defterim.apk
+
+  yayinla:
+    needs: [windows, android]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      - name: Sürümü yayınla
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('indir-{0}', github.run_number) }}
+          name: Kermes Defterim ${{ github.ref_type == 'tag' && github.ref_name || format('#{0}', github.run_number) }}
+          files: |
+            out/Kermes-Defterim-Kurulum.exe
+            out/Kermes-Defterim.apk
