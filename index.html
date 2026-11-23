@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kermes Defterim · Kermes sipariş, mutfak ve kasa uygulaması</title>
+<meta name="description" content="Garson siparişi telefondan yazar, mutfak anında görür, kasa hesabı kapatır. Dernek, okul ve vakıf kermesleri için sipariş ve kasa uygulaması.">
+<meta name="theme-color" content="#184d43">
+<meta property="og:title" content="Kermes Defterim">
+<meta property="og:description" content="Kermesin siparişi, mutfağı ve kasası tek uygulamada.">
+<meta property="og:image" content="https://kermesdefterim.com/img/paylas.png">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="192x192" href="/img/ikon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://kermesdefterim.com/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Fredoka:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Uygulamanın kendi renkleri ve ölçüleri */
+:root{
+  --ink:#1f302d; --muted:#778580; --line:#e5ebe7; --paper:#f5f7f4; --white:#fff;
+  --green:#184d43; --green2:#286e5d; --mint:#e4f1eb;
+  --orange:#d8893a; --orange-soft:#fff2e2; --red:#c65342;
+  --shadow:0 12px 35px rgba(25,55,46,.08); --soft:0 3px 14px rgba(25,55,46,.025);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.6 "DM Sans",Arial,sans-serif;overflow-x:hidden}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--orange);outline-offset:3px;border-radius:8px}
+.wrap{width:min(1180px,100% - 32px);margin-inline:auto}
+h1,h2,h3{font-family:Manrope,sans-serif;font-weight:800;margin:0;color:var(--ink)}
+p{margin:0}
+
+/* butonlar: uygulamadaki .primary / .secondary / .soft-button */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:0;border-radius:11px;padding:13px 18px;font:700 15px/1 "DM Sans";text-decoration:none;cursor:pointer;transition:.18s}
+.btn svg{width:19px;height:19px;flex:none}
+.primary{background:var(--green);color:#fff}
+.primary:hover{background:var(--green2);transform:translateY(-1px)}
+.secondary{background:#fff;color:var(--green);border:1px solid var(--line)}
+.secondary:hover{border-color:#c9d6cf}
+.soft{background:var(--mint);color:var(--green)}
+.soft:hover{background:#d7eae1}
+.wa{background:#1f9d55;color:#fff}
+.wa:hover{background:#178447;transform:translateY(-1px)}
+.on-green{background:#fff;color:var(--green)}
+.on-green:hover{background:#e3f0e9}
+
+/* üst çubuk: uygulamadaki .topbar */
+.topbar{position:sticky;top:0;z-index:10;height:72px;background:rgba(255,255,255,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .wrap{height:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--green)}
+.brand-mark{display:grid;place-items:center;width:40px;height:40px;border-radius:13px;background:var(--green);color:#e3f0e9;font-size:21px}
+.brand-name{font:500 24px/1 "Fredoka","Nunito",sans-serif;letter-spacing:.2px}
+.menu{display:flex;gap:6px;list-style:none;margin:0;padding:0}
+.menu a{display:block;text-decoration:none;color:#557068;font-weight:600;font-size:14px;padding:9px 12px;border-radius:10px}
+.menu a:hover{background:var(--mint);color:var(--green)}
+.top-actions{display:flex;align-items:center;gap:10px}
+.sync-pill{font-size:12px;color:#557068;display:flex;align-items:center;gap:7px;padding:8px 12px;border:1px solid var(--line);border-radius:30px;background:#fff;white-space:nowrap}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#46a17a;box-shadow:0 0 0 0 rgba(70,161,122,.5);animation:nabiz 2s infinite}
+@keyframes nabiz{70%{box-shadow:0 0 0 7px rgba(70,161,122,0)}100%{box-shadow:0 0 0 0 rgba(70,161,122,0)}}
+
+/* açılış: uygulamanın giriş ekranındaki yeşil alan */
+.hero{padding:28px 0 0}
+.hero-art{position:relative;overflow:hidden;background:var(--green);color:#fff;border-radius:28px;padding:64px 56px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.hero-art::before,.hero-art::after{content:"";position:absolute;border:1px solid rgba(255,255,255,.14);border-radius:50%;pointer-events:none}
+.hero-art::before{width:520px;height:520px;left:-160px;bottom:-300px}
+.hero-art::after{width:380px;height:380px;left:-90px;bottom:-230px}
+.hero-copy{position:relative;z-index:1}
+.hero-copy h1{color:#fff;font-size:clamp(38px,5vw,62px);line-height:1.04;letter-spacing:-2.4px}
+.hero-copy p{margin-top:20px;color:#d5e8df;font-size:18px;line-height:1.65;max-width:30em}
+.hero-tags{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.hero-tags span{font-size:13px;border:1px solid rgba(255,255,255,.22);padding:8px 13px;border-radius:100px;color:#edf7f2}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+
+/* canlı örnek: garson siparişi → mutfak fişi */
+.demo{position:relative;z-index:1;display:grid;gap:14px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:19px;box-shadow:var(--soft)}
+.demo .panel{color:var(--ink);box-shadow:0 24px 50px -24px rgba(0,0,0,.45)}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.panel-title{font:700 15px Manrope,sans-serif}
+.panel-subtitle{color:var(--muted);font-size:12px;margin-top:3px}
+.badge{font-size:11px;font-weight:700;padding:5px 9px;border-radius:30px;background:#eff3f0;color:#65736e;white-space:nowrap}
+.pending{background:#ffebcd;color:#935b18}
+.ready{background:#d9eee0;color:#1d6446}
+.satir{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid #f0f2ef;font-size:14px}
+.satir:last-child{border-bottom:0}
+.satir .ad{flex:1;font-weight:700}
+.satir .fiyat{color:var(--muted);font-size:13px}
+.adet{min-width:38px;height:30px;border:1px solid var(--line);border-radius:9px;display:grid;place-items:center;font:800 14px Manrope;color:var(--green);transition:background .2s,border-color .2s}
+.adet.dolu{background:var(--mint);border-color:#bfdccf}
+.adet.pop{animation:pop .3s ease}
+@keyframes pop{50%{transform:scale(1.18)}}
+.toplam{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.toplam strong{font:800 20px Manrope;color:var(--green)}
+.gonder{padding:10px 14px;font-size:13px}
+.gonder.basildi{background:var(--green2);transform:scale(.96)}
+
+.ticket{border:1px solid #e6eae6;border-radius:15px;background:#fff;overflow:hidden;color:var(--ink);box-shadow:0 24px 50px -24px rgba(0,0,0,.45);transition:border-color .3s}
+.ticket.yeni{animation:gel .5s cubic-bezier(.2,1.1,.4,1) both}
+@keyframes gel{from{opacity:0;transform:translateY(-16px)}}
+.ticket.hazir{border-color:#52a77b}
+.ticket-head{background:#fff9f0;padding:13px 16px;border-bottom:1px dashed #e9d8c4;display:flex;justify-content:space-between;align-items:center;gap:12px;transition:background .3s}
+.ticket.hazir .ticket-head{background:#f1f8f4;border-bottom-color:#cfe5d8}
+.ticket-table{font:800 16px Manrope}
+.ticket-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.ticket-body{padding:8px 16px 12px;font-size:13px}
+.ticket-line{display:flex;gap:10px;padding:5px 0}
+.ticket-qty{font:800 14px Manrope;color:var(--green);min-width:24px}
+.ticket-line b{font-weight:700}
+.bos-fis{border:1px dashed rgba(255,255,255,.28);border-radius:15px;padding:22px;text-align:center;color:#b8d8c9;font-size:13px}
+
+/* bölüm başlıkları: uygulamadaki .page-heading */
+section{scroll-margin-top:84px}
+.bolum{padding:88px 0 0}
+.page-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:28px}
+.page-heading h2{font-size:clamp(28px,3.6vw,40px);line-height:1.1;letter-spacing:-1.2px}
+.page-heading p{color:var(--muted);margin-top:10px;font-size:17px;max-width:36em}
+
+/* özet kartları: uygulamadaki .stat-card */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+.stat-card{padding:18px;border:1px solid var(--line);background:#fff;border-radius:16px;box-shadow:var(--soft)}
+.stat-top{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;color:#5b6b66}
+.stat-icon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--mint);color:var(--green);font-size:16px;flex:none}
+.stat-value{font:800 30px Manrope;margin-top:10px;color:var(--ink);letter-spacing:-.5px}
+.stat-sub{font-size:12px;color:var(--muted)}
+
+/* adımlar */
+.adimlar{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.adim{display:flex;flex-direction:column}
+.adim .panel-head{margin-bottom:6px}
+.adim p{color:var(--muted);font-size:14px;min-height:4.8em}
+.no{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--green);color:#fff;font:800 15px Manrope;flex:none}
+.telefon{margin-top:18px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 16px 0;overflow:hidden;height:420px}
+.telefon img{width:min(250px,100%);margin:0 auto;border-radius:22px 22px 0 0;border:6px solid #1f302d;border-bottom:0;box-shadow:var(--shadow)}
+
+/* mutfak ekranı */
+.tv-panel{display:grid;grid-template-columns:.75fr 1.25fr;gap:40px;align-items:center;padding:36px}
+.tv-panel h2{font-size:clamp(26px,3.2vw,36px);letter-spacing:-1px;line-height:1.12}
+.tv-panel p{color:var(--muted);margin-top:14px;font-size:16px}
+.tv-panel ul{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:14px}
+.tv-panel li{display:flex;gap:10px;align-items:center}
+.tv-panel li::before{content:"✓";display:grid;place-items:center;width:22px;height:22px;border-radius:7px;background:var(--mint);color:var(--green);font-size:12px;font-weight:800;flex:none}
+.monitor{background:#16201d;border-radius:16px;padding:10px;box-shadow:var(--shadow)}
+.monitor img{border-radius:9px}
+
+/* özellikler */
+.ozellikler{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ozellik{display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:start}
+.ozellik h3{font-size:16px;font-weight:700;margin-top:6px}
+.ozellik p{color:var(--muted);font-size:14px;margin-top:4px}
+.kimler{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;color:var(--muted);font-size:14px}
+.kimler span{background:#fff;border:1px solid var(--line);border-radius:30px;padding:7px 13px;color:#4f625c;font-weight:600}
+
+/* indir */
+.indir-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.indir-kart{display:flex;flex-direction:column;gap:6px;padding:24px}
+.indir-kart.ana{border-color:#bfdccf;background:linear-gradient(#fff,#f6fbf8)}
+.indir-kart .stat-icon{width:46px;height:46px;border-radius:14px;margin-bottom:10px}
+.indir-kart .stat-icon svg{width:24px;height:24px}
+.indir-kart h3{font-size:18px}
+.indir-kart p{color:var(--muted);font-size:14px;flex:1;margin-bottom:14px}
+.indir-kart .btn{align-self:flex-start}
+.yardim{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+details{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--soft)}
+summary{cursor:pointer;list-style:none;padding:16px 18px;font:700 14px Manrope;display:flex;justify-content:space-between;align-items:center;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";width:26px;height:26px;border-radius:8px;background:var(--mint);color:var(--green);display:grid;place-items:center;font-size:17px;flex:none;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details ol{margin:0;padding:0 18px 16px 38px;color:var(--muted);font-size:14px}
+details li{margin:4px 0}
+details b{color:var(--ink)}
+
+/* iletişim */
+.iletisim{padding:88px 0 0}
+.iletisim .hero-art{grid-template-columns:1.2fr .8fr;padding:56px}
+.iletisim h2{color:#fff;font-size:clamp(30px,4vw,46px);line-height:1.08;letter-spacing:-1.6px}
+.iletisim p{color:#d5e8df;margin-top:16px;font-size:17px;max-width:32em}
+.iletisim .sag{position:relative;z-index:1;display:grid;gap:12px;justify-items:start}
+.iletisim .btn{font-size:16px;padding:16px 22px}
+.deneme{display:flex;align-items:center;gap:10px;color:#edf7f2;font-size:14px}
+.deneme b{font:800 15px Manrope;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:30px;padding:6px 12px}
+
+footer{padding:48px 0 40px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--line);padding-top:24px}
+footer a{color:var(--green);font-weight:600}
+
+.wa-yuzen{position:fixed;right:18px;bottom:18px;z-index:20;width:58px;height:58px;border-radius:18px;background:#1f9d55;color:#fff;display:grid;place-items:center;box-shadow:0 12px 28px -8px rgba(20,60,40,.5);transition:transform .2s}
+.wa-yuzen:hover{transform:translateY(-2px)}
+.wa-yuzen svg{width:30px;height:30px}
+
+/* mobil */
+@media (max-width:980px){
+  .menu,.sync-pill{display:none}
+  .hero-art,.iletisim .hero-art{grid-template-columns:1fr;padding:40px 28px;gap:36px}
+  .stats{grid-template-columns:1fr 1fr}
+  .adimlar,.ozellikler,.indir-grid,.yardim{grid-template-columns:1fr}
+  .adim p{min-height:0}
+  .tv-panel{grid-template-columns:1fr;padding:24px}
+  .page-heading{display:block}
+}
+@media (max-width:520px){
+  .hero{padding-top:12px}
+  .hero-art{border-radius:22px;padding:32px 20px}
+  .hero-copy h1{letter-spacing:-1.6px}
+  .hero-copy p{font-size:16px}
+  .hero-cta .btn{flex:1 1 100%}
+  .top-actions .btn span{display:none}
+  .top-actions .btn{padding:11px}
+  .brand-name{font-size:21px}
+  .stat-value{font-size:24px}
+  .bolum,.iletisim{padding-top:64px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#"><span class="brand-mark" aria-hidden="true">✳</span><span class="brand-name">Kermes Defterim</span></a>
+    <ul class="menu">
+      <li><a href="#nasil">Nasıl çalışır</a></li>
+      <li><a href="#neler">Neler var</a></li>
+      <li><a href="#indir">İndir</a></li>
+    </ul>
+    <div class="top-actions">
+      <span class="sync-pill"><i class="sync-dot"></i>Bulutta, canlı eşitleme</span>
+      <a class="btn wa" data-wa href="#iletisim"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#wa-ikon"/></svg><span>WhatsApp'tan yaz</span></a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-art">
+      <div class="hero-copy">
+        <h1>Kermesin siparişi, mutfağı ve kasası tek uygulamada.</h1>
+        <p>Garson siparişi masada telefondan girer. Mutfak fişi aynı anda ekranında görür, kasa masanın hesabını tek dokunuşla kapatır.</p>
+        <div class="hero-tags"><span>Garson</span><span>Mutfak</span><span>Kasa</span><span>Borç takibi</span><span>Satış raporu</span></div>
+        <div class="hero-cta">
+          <a class="btn on-green" data-wa href="#iletisim"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#wa-ikon"/></svg>Deneme hesabı iste</a>
+          <a class="btn" style="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25)" href="#indir">Uygulamayı indir</a>
+        </div>
+      </div>
+
+      <div class="demo" aria-label="Örnek: garsonun girdiği sipariş mutfak fişine dönüşüyor">
+        <div class="panel" aria-hidden="true">
+          <div class="panel-head">
+            <div><div class="panel-title" id="d-masa">Masa 4 · Sipariş</div><div class="panel-subtitle">Fişler ürünün bağlı olduğu tezgâha gider.</div></div>
+            <span class="badge">Garson</span>
+          </div>
+          <div id="d-urunler"></div>
+          <div class="toplam"><div><div class="panel-subtitle" style="margin:0">Toplam</div><strong id="d-toplam">₺0,00</strong></div><span class="btn primary gonder" id="d-gonder">Siparişi gönder</span></div>
+        </div>
+        <div id="d-fisler" aria-hidden="true"><div class="bos-fis">Mutfak fişi burada belirecek</div></div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card"><div class="stat-top">Görev ekranı<span class="stat-icon">♙</span></div><div class="stat-value">4</div><div class="stat-sub">Yönetici, garson, mutfak, kasa</div></div>
+      <div class="stat-card"><div class="stat-top">Mutfak ekranı<span class="stat-icon">▣</span></div><div class="stat-value">~1,5 sn</div><div class="stat-sub">Yeni fişin ekrana düşme süresi</div></div>
+      <div class="stat-card"><div class="stat-top">Tezgâh<span class="stat-icon">▤</span></div><div class="stat-value">3+</div><div class="stat-sub">Mutfak, içecek, tatlı; istediğiniz kadar</div></div>
+      <div class="stat-card"><div class="stat-top">Deneme<span class="stat-icon">✓</span></div><div class="stat-value">7 gün</div><div class="stat-sub">Ücretsiz, kart bilgisi istenmez</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="bolum" id="nasil">
+  <div class="wrap">
+    <div class="page-heading">
+      <div><h2>Bir siparişin yolu</h2><p>Herkes kendi işini kendi ekranında görür. Garsonun, mutfağın ve kasanın ayrı PIN'i vardır.</p></div>
+    </div>
+    <div class="adimlar">
+      <article class="panel adim">
+        <div class="panel-head"><div class="panel-title">Garson girer</div><span class="no">1</span></div>
+        <p>Masayı seçer, ürünlerin adedini ve notu girer. Masadaki QR'dan garson çağıran misafir de bu ekranda belirir.</p>
+        <div class="telefon"><img src="img/garson.webp" alt="Garson ekranı: masalar, bekleyen çağrılar ve açık hesaplar" loading="lazy" width="585" height="1266"></div>
+      </article>
+      <article class="panel adim">
+        <div class="panel-head"><div class="panel-title">Mutfak hazırlar</div><span class="no">2</span></div>
+        <p>Fiş ilgili tezgâha düşer: gözleme mutfağa, çay içecek tezgâhına, sütlaç tatlıya. Hazır olunca tek dokunuş.</p>
+        <div class="telefon"><img src="img/mutfak.webp" alt="Mutfak ekranı: bekleyen hazırlık fişleri" loading="lazy" width="585" height="1266"></div>
+      </article>
+      <article class="panel adim">
+        <div class="panel-head"><div class="panel-title">Kasa kapatır</div><span class="no">3</span></div>
+        <p>Masanın bütün siparişleri tek hesapta toplanır. Nakit, kart ya da borç defterine yazarak kapatılır.</p>
+        <div class="telefon"><img src="img/kasa.webp" alt="Kasa ekranı: açık hesaplar ve ödeme bekleyen masalar" loading="lazy" width="585" height="1266"></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="bolum">
+  <div class="wrap">
+    <div class="panel tv-panel">
+      <div>
+        <h2>Mutfağa bir ekran asın, kimse fiş taşımasın</h2>
+        <p>Mutfak TV yeni siparişleri büyük yazıyla gösterir ve kendiliğinden yenilenir.</p>
+        <ul>
+          <li>Eski bir dizüstü ya da akıllı televizyon yeter</li>
+          <li>Tezgâha göre süzülür: yalnızca mutfak, yalnızca içecek</li>
+          <li>Hazır olan sipariş garsonun ekranına düşer</li>
+        </ul>
+      </div>
+      <div class="monitor"><img src="img/mutfak-tv.webp" alt="Mutfak TV ekranı: masalara göre hazırlanan siparişler" loading="lazy" width="1600" height="1000"></div>
+    </div>
+  </div>
+</section>
+
+<section class="bolum" id="neler">
+  <div class="wrap">
+    <div class="page-heading">
+      <div><h2>Kermes gününde işinize yarayanlar</h2><p>Hepsi aynı uygulamada, ek ücret olmadan.</p></div>
+    </div>
+    <div class="ozellikler">
+      <div class="panel ozellik"><span class="stat-icon">♧</span><div><h3>Masadan garson çağırma</h3><p>Misafir masadaki QR'ı okutur, "Garson çağır"a dokunur; çağrı garsonun ekranına düşer.</p></div></div>
+      <div class="panel ozellik"><span class="stat-icon">▦</span><div><h3>Stok durumu</h3><p>Gözleme bitince "stokta yok" deyin, garson onu siparişe ekleyemez.</p></div></div>
+      <div class="panel ozellik"><span class="stat-icon">◷</span><div><h3>Borç takibi</h3><p>"Sonra öderim" diyenin hesabı isimle kaydedilir, ödeyince kapanır.</p></div></div>
+      <div class="panel ozellik"><span class="stat-icon">◈</span><div><h3>Kermes sonu raporu</h3><p>Toplam satış, ürün ürün gelir ve giderler Excel dosyası olarak iner.</p></div></div>
+      <div class="panel ozellik"><span class="stat-icon">▤</span><div><h3>Ayrı tezgâhlar</h3><p>Mutfak, içecek ve tatlı tezgâhı yalnızca kendi fişlerini görür.</p></div></div>
+      <div class="panel ozellik"><span class="stat-icon">₺</span><div><h3>Masasız hızlı satış</h3><p>Tezgâhtan alınan çay ya da paket kek kasadan doğrudan satılır.</p></div></div>
+    </div>
+    <div class="kimler">Kimler kullanır:<span>Dernekler</span><span>Okul aile birlikleri</span><span>Cami ve vakıf kermesleri</span><span>Hayır çarşıları</span></div>
+  </div>
+</section>
+
+<section class="bolum" id="indir">
+  <div class="wrap">
+    <div class="page-heading">
+      <div><h2>Uygulamayı indirin</h2><p>Hesabınız açılınca kermes kodunuz ve PIN'inizle girersiniz. Bütün cihazlar aynı bilgiyi görür.</p></div>
+    </div>
+    <div class="indir-grid">
+      <div class="panel indir-kart ana">
+        <span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10.5 18.5h3"/></svg></span>
+        <h3>Android telefon ve tablet</h3>
+        <p>Garsonlar ve kasa için. Android 8 ve üstü.</p>
+        <a class="btn primary" data-indir="apk" href="#">Android için indir</a>
+      </div>
+      <div class="panel indir-kart">
+        <span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
+        <h3>Windows bilgisayar</h3>
+        <p>Kasa ve mutfak ekranı için. Masaüstüne kısayol açar.</p>
+        <a class="btn primary" data-indir="exe" href="#">Windows için indir</a>
+      </div>
+      <div class="panel indir-kart">
+        <span class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5c3 3 3 16 0 19M12 2.5c-3 3-3 16 0 19"/></svg></span>
+        <h3>iPhone ve diğerleri</h3>
+        <p>Kurulum gerekmez, tarayıcıdan açılır. Ana ekrana eklenebilir.</p>
+        <a class="btn secondary" href="https://app.kermesdefterim.com">Tarayıcıda aç</a>
+      </div>
+    </div>
+    <div class="yardim">
+      <details>
+        <summary>Android "bilinmeyen uygulama" uyarısı</summary>
+        <ol>
+          <li>İndirilen dosyaya dokunun. İzin isterse <b>Ayarlar</b>'a dokunun.</li>
+          <li><b>Bu kaynaktan izin ver</b>'i açıp geri dönün.</li>
+          <li><b>Yükle</b>'ye dokunun. Play Protect sorarsa <b>Yine de yükle</b> deyin.</li>
+        </ol>
+      </details>
+      <details>
+        <summary>Windows "bilgisayarınız korundu" uyarısı</summary>
+        <ol>
+          <li>Uyarıda <b>Ek bilgi</b> yazısına tıklayın.</li>
+          <li><b>Yine de çalıştır</b>'a basın.</li>
+          <li>Kurulum birkaç saniyede biter, uygulama kendiliğinden açılır.</li>
+        </ol>
+      </details>
+      <details>
+        <summary>iPhone'da ana ekrana ekleme</summary>
+        <ol>
+          <li>Safari ile <b>app.kermesdefterim.com</b> adresini açın.</li>
+          <li>Paylaş düğmesine, ardından <b>Ana Ekrana Ekle</b>'ye dokunun.</li>
+        </ol>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="iletisim" id="iletisim">
+  <div class="wrap">
+    <div class="hero-art">
+      <div class="hero-copy">
+        <h2>Kermesiniz ne zaman? Ona göre bir hesap açalım.</h2>
+        <p>Fiyat, kermesinizin kaç gün ya da kaç ay süreceğine göre değişir. WhatsApp'tan yazın; deneme hesabınızı aynı gün açıp kermes kodunuzu gönderelim.</p>
+      </div>
+      <div class="sag">
+        <a class="btn on-green" data-wa href="#"><svg viewBox="0 0 24 24" aria-hidden="true" style="color:#1f9d55"><use href="#wa-ikon"/></svg>WhatsApp'tan yazın</a>
+        <div class="deneme"><b>7 gün</b>ücretsiz deneme</div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yil">2026</span> Kermes Defterim</span>
+    <a href="https://app.kermesdefterim.com">Uygulamaya giriş</a>
+  </div>
+</footer>
+
+<a class="wa-yuzen" data-wa href="#iletisim" aria-label="WhatsApp'tan yazın"><svg viewBox="0 0 24 24"><use href="#wa-ikon"/></svg></a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="wa-ikon" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2a9.9 9.9 0 0 0-8.53 14.94L2 22l5.2-1.47A9.92 9.92 0 1 0 12.04 2Zm0 18.13a8.2 8.2 0 0 1-4.2-1.15l-.3-.18-3.09.87.83-3.01-.2-.31a8.22 8.22 0 1 1 6.96 3.780Zm4.51-6.15c-.25-.12-1.46-.72-1.690-.8-.23-.08-.39-.12-.55.12-.16.25-.63.8-.78.96-.14.17-.29.19-.53.06a6.740 6.740 0 0 1-3.34-2.92c-.25-.43.25-.4.72-1.34.08-.16.04-.3-.02-.43-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.41-.55-.42h-.47a.9.9 0 0 0-.65.3c-.22.25-.86.84-.86 2.05s.88 2.37 1 2.54c.12.16 1.73 2.64 4.19 3.7 1.56.67 2.17.73 2.95.62.47-.07 1.46-.6 1.66-1.18.21-.58.21-1.07.15-1.18-.06-.1-.22-.16-.47-.28Z"/></symbol>
+</svg>
+
+<script>
+/* ======= AYARLAR: yalnızca burayı değiştirin ======= */
+const WHATSAPP = '905516333103';            // başında 90, boşluksuz
+const GITHUB_DEPO = 'youngmoon580-alt/kermes-uygulama';
+/* ================================================== */
+
+const indirAdresi = (dosya) => `https://github.com/${GITHUB_DEPO}/releases/latest/download/${dosya}`;
+document.querySelectorAll('[data-indir="apk"]').forEach(a => a.href = indirAdresi('Kermes-Defterim.apk'));
+document.querySelectorAll('[data-indir="exe"]').forEach(a => a.href = indirAdresi('Kermes-Defterim-Kurulum.exe'));
+const waMetin = encodeURIComponent('Merhaba, Kermes Defterim hakkında bilgi almak istiyorum.');
+document.querySelectorAll('[data-wa]').forEach(a => { a.href = `https://wa.me/${WHATSAPP}?text=${waMetin}`; a.target = '_blank'; a.rel = 'noopener'; });
+document.getElementById('yil').textContent = new Date().getFullYear();
+
+/* canlı örnek: garson adet girer → gönder → mutfak fişi düşer → hazır */
+(function () {
+  const az = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tl = (n) => '₺' + n.toLocaleString('tr-TR', { minimumFractionDigits: 2 });
+  const menu = [['Patatesli gözleme', 90], ['Ev mantısı', 150], ['Çay', 15], ['Sütlaç', 70]];
+  const siparisler = [
+    { masa: 'Masa 4', adet: [2, 0, 3, 1], tezgah: 'Mutfak + İçecek + Tatlı' },
+    { masa: 'Masa 7', adet: [0, 2, 2, 0], tezgah: 'Mutfak + İçecek' },
+    { masa: 'Masa 1', adet: [3, 0, 4, 2], tezgah: 'Mutfak + İçecek + Tatlı' },
+  ];
+  const urunler = document.getElementById('d-urunler'), toplam = document.getElementById('d-toplam');
+  const baslik = document.getElementById('d-masa'), gonder = document.getElementById('d-gonder'), fisler = document.getElementById('d-fisler');
+  const bekle = (ms) => new Promise(r => setTimeout(r, az ? 0 : ms));
+  let sira = 0, dk = 38;
+  async function tur() {
+    const s = siparisler[sira++ % siparisler.length];
+    baslik.textContent = s.masa + ' · Sipariş';
+    urunler.innerHTML = menu.map(([ad, f]) => `<div class="satir"><span class="ad">${ad}</span><span class="fiyat">${tl(f)}</span><span class="adet">0</span></div>`).join('');
+    toplam.textContent = tl(0);
+    const kutular = urunler.querySelectorAll('.adet');
+    let t = 0;
+    await bekle(700);
+    for (let i = 0; i < menu.length; i++) {
+      for (let k = 1; k <= s.adet[i]; k++) {
+        kutular[i].textContent = k; kutular[i].classList.add('dolu');
+        kutular[i].classList.remove('pop'); void kutular[i].offsetWidth; kutular[i].classList.add('pop');
+        t += menu[i][1]; toplam.textContent = tl(t);
+        await bekle(330);
+      }
+    }
+    await bekle(400);
+    gonder.classList.add('basildi'); await bekle(180); gonder.classList.remove('basildi');
+    dk = (dk + 3) % 60;
+    const satirlar = menu.map(([ad], i) => s.adet[i] ? `<div class="ticket-line"><span class="ticket-qty">${s.adet[i]}×</span><b>${ad}</b></div>` : '').join('');
+    fisler.innerHTML = `<div class="ticket yeni"><div class="ticket-head"><div><div class="ticket-table">${s.masa}</div><div class="ticket-meta">12:${String(dk).padStart(2, '0')} · ${s.tezgah}</div></div><span class="badge pending">Hazırlanıyor</span></div><div class="ticket-body">${satirlar}</div></div>`;
+    await bekle(2200);
+    const fis = fisler.firstElementChild; fis.classList.add('hazir');
+    const b = fis.querySelector('.badge'); b.className = 'badge ready'; b.textContent = 'Hazır';
+    await bekle(2600);
+    if (!az) tur();
+  }
+  tur();
+})();
+</script>
+</body>
+</html>
