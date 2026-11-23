@@ -148,6 +148,22 @@ section{scroll-margin-top:84px}
 .monitor img{border-radius:9px}
 
 /* özellikler */
+.paketler{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:stretch}
+.paket{display:flex;flex-direction:column;gap:14px;padding:22px}
+.paket-one{border:2px solid var(--green)}
+.paket-bas h3{font-size:20px;font-weight:800;letter-spacing:-.4px}
+.paket-kim{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+.paket-fiyat{display:flex;align-items:baseline;gap:6px}
+.paket-fiyat strong{font-family:Manrope,sans-serif;font-size:32px;font-weight:800;letter-spacing:-1px;color:var(--green)}
+.paket-fiyat span{color:var(--muted);font-size:14px}
+.paket-liste{list-style:none;margin:0;padding:0;display:grid;gap:9px;flex:1;align-content:start}
+.paket-liste li{position:relative;padding-left:24px;font-size:14px;line-height:1.45}
+.paket-liste li:before{content:"✓";position:absolute;left:0;top:0;color:var(--green);font-weight:800}
+.paket-liste li.paket-ust{font-weight:700}
+.paket-liste .badge{margin-left:4px;vertical-align:1px}
+.paket-btn{justify-content:center;width:100%}
+.paket-btn:not(.primary){background:var(--mint);color:var(--green);border:1px solid transparent}
+.paket-not{color:var(--muted);font-size:14px;margin-top:16px}
 .ozellikler{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .ozellik{display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:start}
 .ozellik h3{font-size:16px;font-weight:700;margin-top:6px}
@@ -197,7 +213,7 @@ footer a{color:var(--green);font-weight:600}
   .menu,.sync-pill{display:none}
   .hero-art,.iletisim .hero-art{grid-template-columns:1fr;padding:40px 28px;gap:36px}
   .stats{grid-template-columns:1fr 1fr}
-  .adimlar,.ozellikler,.indir-grid,.yardim{grid-template-columns:1fr}
+  .adimlar,.ozellikler,.indir-grid,.yardim,.paketler{grid-template-columns:1fr}
   .adim p{min-height:0}
   .tv-panel{grid-template-columns:1fr;padding:24px}
   .page-heading{display:block}
@@ -228,6 +244,7 @@ footer a{color:var(--green);font-weight:600}
     <ul class="menu">
       <li><a href="#nasil">Nasıl çalışır</a></li>
       <li><a href="#neler">Neler var</a></li>
+      <li><a href="#paketler">Paketler</a></li>
       <li><a href="#indir">İndir</a></li>
     </ul>
     <div class="top-actions">
@@ -318,7 +335,7 @@ footer a{color:var(--green);font-weight:600}
 <section class="bolum" id="neler">
   <div class="wrap">
     <div class="page-heading">
-      <div><h2>Kermes gününde işinize yarayanlar</h2><p>Hepsi aynı uygulamada, ek ücret olmadan.</p></div>
+      <div><h2>Kermes gününde işinize yarayanlar</h2><p>Hepsi aynı uygulamada. Hangilerinin açık olacağı seçtiğiniz pakete göre değişir.</p></div>
     </div>
     <div class="ozellikler">
       <div class="panel ozellik"><span class="stat-icon">♧</span><div><h3>Masadan garson çağırma</h3><p>Misafir masadaki QR'ı okutur, "Garson çağır"a dokunur; çağrı garsonun ekranına düşer.</p></div></div>
@@ -329,6 +346,55 @@ footer a{color:var(--green);font-weight:600}
       <div class="panel ozellik"><span class="stat-icon">₺</span><div><h3>Masasız hızlı satış</h3><p>Tezgâhtan alınan çay ya da paket kek kasadan doğrudan satılır.</p></div></div>
     </div>
     <div class="kimler">Kimler kullanır:<span>Dernekler</span><span>Okul aile birlikleri</span><span>Cami ve vakıf kermesleri</span><span>Hayır çarşıları</span></div>
+  </div>
+</section>
+
+<section class="bolum" id="paketler">
+  <div class="wrap">
+    <div class="page-heading">
+      <div><h2>Paketler</h2><p>Fiyatlar yıllıktır. Paketinizi kermesinize göre seçin, sonra istediğiniz zaman değiştirin.</p></div>
+    </div>
+    <div class="paketler">
+      <div class="panel paket">
+        <div class="paket-bas"><h3>Normal</h3><span class="paket-kim">Masasız, kasadan satış</span></div>
+        <div class="paket-fiyat"><strong>2.000 ₺</strong><span>/ yıl</span></div>
+        <ul class="paket-liste">
+          <li>Kasadan ürün seçerek satış</li>
+          <li>Mutfak ve tezgâh fişleri</li>
+          <li>Mutfak TV ekranı</li>
+          <li>Tezgâh yazıcısından otomatik fiş</li>
+          <li>Stok durumu ve "tükendi"</li>
+          <li>Borç takibi</li>
+          <li>Satış raporu ve kermes sonu Excel'i</li>
+          <li>Genel menü QR'ı</li>
+        </ul>
+        <a class="btn paket-btn" data-wa data-paket="Normal" href="#iletisim">Normal paketi iste</a>
+      </div>
+      <div class="panel paket paket-one">
+        <div class="paket-bas"><h3>Pro</h3><span class="paket-kim">Masalı, garsonlu kermes</span></div>
+        <div class="paket-fiyat"><strong>2.500 ₺</strong><span>/ yıl</span></div>
+        <ul class="paket-liste">
+          <li class="paket-ust">Normal'deki her şey</li>
+          <li>Garson telefondan sipariş alır</li>
+          <li>Masa hesabı ve servis takibi</li>
+          <li>Masa QR'ı ile menü</li>
+          <li>QR'dan garson çağırma, sesli uyarı</li>
+          <li>Masa QR kartlarını A4'e yazdırma</li>
+        </ul>
+        <a class="btn primary paket-btn" data-wa data-paket="Pro" href="#iletisim">Pro paketi iste</a>
+      </div>
+      <div class="panel paket">
+        <div class="paket-bas"><h3>Premium</h3><span class="paket-kim">Masada çağrı butonu</span></div>
+        <div class="paket-fiyat"><strong>3.000 ₺</strong><span>/ yıl</span></div>
+        <ul class="paket-liste">
+          <li class="paket-ust">Pro'daki her şey</li>
+          <li>Masalara kablosuz garson çağırma butonu <span class="badge">yakında</span></li>
+          <li>Butona basınca çağrı garsonun ekranına düşer</li>
+        </ul>
+        <a class="btn paket-btn" data-wa data-paket="Premium" href="#iletisim">Premium paketi iste</a>
+      </div>
+    </div>
+    <p class="paket-not">Her pakette 7 gün ücretsiz deneme var. Ödeme ve hesap açılışı için WhatsApp'tan yazmanız yeterli.</p>
   </div>
 </section>
 
@@ -389,8 +455,8 @@ footer a{color:var(--green);font-weight:600}
   <div class="wrap">
     <div class="hero-art">
       <div class="hero-copy">
-        <h2>Kermesiniz ne zaman? Ona göre bir hesap açalım.</h2>
-        <p>Fiyat, kermesinizin kaç gün ya da kaç ay süreceğine göre değişir. WhatsApp'tan yazın; deneme hesabınızı aynı gün açıp kermes kodunuzu gönderelim.</p>
+        <h2>Kermesiniz ne zaman? Hesabınızı hemen açalım.</h2>
+        <p>Paketinizi seçin, WhatsApp'tan yazın; deneme hesabınızı aynı gün açıp kermes kodunuzu gönderelim.</p>
       </div>
       <div class="sag">
         <a class="btn on-green" data-wa href="#"><svg viewBox="0 0 24 24" aria-hidden="true" style="color:#1f9d55"><use href="#wa-ikon"/></svg>WhatsApp'tan yazın</a>
@@ -424,7 +490,7 @@ const indirAdresi = (dosya) => `https://github.com/${GITHUB_DEPO}/releases/lates
 document.querySelectorAll('[data-indir="apk"]').forEach(a => a.href = indirAdresi('Kermes-Defterim.apk'));
 document.querySelectorAll('[data-indir="exe"]').forEach(a => a.href = indirAdresi('Kermes-Defterim-Kurulum.exe'));
 const waMetin = encodeURIComponent('Merhaba, Kermes Defterim hakkında bilgi almak istiyorum.');
-document.querySelectorAll('[data-wa]').forEach(a => { a.href = `https://wa.me/${WHATSAPP}?text=${waMetin}`; a.target = '_blank'; a.rel = 'noopener'; });
+document.querySelectorAll('[data-wa]').forEach(a => { const m = a.dataset.paket ? encodeURIComponent(`Merhaba, Kermes Defterim ${a.dataset.paket} paketi hakkında bilgi almak istiyorum.`) : waMetin; a.href = `https://wa.me/${WHATSAPP}?text=${m}`; a.target = '_blank'; a.rel = 'noopener'; });
 document.getElementById('yil').textContent = new Date().getFullYear();
 
 /* canlı örnek: garson adet girer → gönder → mutfak fişi düşer → hazır */
