@@ -1,7 +1,13 @@
 package com.kermesdefterim.app;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.webkit.JavascriptInterface;
+import org.json.JSONObject;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +26,9 @@ public class MainActivity extends Activity {
     private static final String HOST = "app.kermesdefterim.com";
 
     private WebView web;
+    /** Uygulama ekrandayken bildirim gösterilmez. */
+    static volatile boolean ekranda;
+    private static final int IZIN_ISTEGI = 7;
 
     @Override
     protected void onCreate(Bundle state) {
@@ -49,6 +58,7 @@ public class MainActivity extends Activity {
         s.setCacheMode(WebSettings.LOAD_DEFAULT);
 
         web.setWebChromeClient(new WebChromeClient());
+        web.addJavascriptInterface(new Kopru(), "KermesAndroid");
         web.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView v, WebResourceRequest req) {
@@ -72,6 +82,9 @@ public class MainActivity extends Activity {
             }
         });
 
+        // Bildirimler açık bırakılmışsa servis kapanmış olabilir: yeniden başlat
+        if (getSharedPreferences(BildirimServisi.PREFS, MODE_PRIVATE).getBoolean("acik", false) && izinVar()) BildirimServisi.baslat(this);
+
         if (state != null) {
             web.restoreState(state);
         } else {
@@ -91,6 +104,54 @@ public class MainActivity extends Activity {
         else super.onBackPressed();
     }
 
-    @Override protected void onPause() { super.onPause(); web.onPause(); }
-    @Override protected void onResume() { super.onResume(); web.onResume(); }
+    @Override protected void onPause() { super.onPause(); ekranda = false; web.onPause(); }
+    @Override protected void onResume() { super.onResume(); ekranda = true; web.onResume(); }
+
+    private boolean izinVar() {
+        return Build.VERSION.SDK_INT < 33 || checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int kod, String[] izinler, int[] sonuclar) {
+        super.onRequestPermissionsResult(kod, izinler, sonuclar);
+        if (kod != IZIN_ISTEGI) return;
+        if (izinVar()) {
+            BildirimServisi.baslat(this);
+        } else {
+            getSharedPreferences(BildirimServisi.PREFS, MODE_PRIVATE).edit().putBoolean("acik", false).apply();
+            web.evaluateJavascript("window.kermesBildirimIzinYok && window.kermesBildirimIzinYok()", null);
+        }
+    }
+
+    /** Web uygulamasının bildirimleri açıp kapattığı köprü (yalnızca kendi alan adımız yüklenir). */
+    private class Kopru {
+        @JavascriptInterface
+        public String bildirimAc(String json) {
+            try {
+                JSONObject j = new JSONObject(json);
+                String origin = j.optString("origin", "");
+                if (!origin.equals("https://" + HOST)) return "hata";
+                SharedPreferences.Editor e = getSharedPreferences(BildirimServisi.PREFS, MODE_PRIVATE).edit();
+                e.putBoolean("acik", true).putString("origin", origin).putString("kod", j.optString("code", ""))
+                    .putString("token", j.optString("token", "")).putString("kullanici", j.optString("user", "")).apply();
+                runOnUiThread(() -> {
+                    if (izinVar()) {
+                        BildirimServisi.durdur(MainActivity.this);
+                        BildirimServisi.baslat(MainActivity.this);
+                    } else if (Build.VERSION.SDK_INT >= 33) {
+                        requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, IZIN_ISTEGI);
+                    }
+                });
+                return izinVar() ? "tamam" : "izin-isteniyor";
+            } catch (Exception ex) {
+                return "hata";
+            }
+        }
+
+        @JavascriptInterface
+        public void bildirimKapat() {
+            getSharedPreferences(BildirimServisi.PREFS, MODE_PRIVATE).edit().putBoolean("acik", false).remove("token").apply();
+            runOnUiThread(() -> BildirimServisi.durdur(MainActivity.this));
+        }
+    }
 }
