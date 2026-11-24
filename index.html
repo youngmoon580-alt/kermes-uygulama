@@ -147,7 +147,10 @@ section{scroll-margin-top:84px}
 .monitor img{border-radius:9px}
 
 /* özellikler */
-.paketler{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:stretch}
+.paketler{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;align-items:stretch}
+.paket-bas h3 .badge{font-size:11px;letter-spacing:0;vertical-align:3px;margin-left:4px}
+.paket-fiyat strong.paket-teklif{font-size:26px}
+@media(max-width:1100px){.paketler{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .paket{display:flex;flex-direction:column;gap:14px;padding:22px}
 .paket-one{border:2px solid var(--green)}
 .paket-bas h3{font-size:20px;font-weight:800;letter-spacing:-.4px}
@@ -357,7 +360,7 @@ footer a{color:var(--green);font-weight:600}
 <section class="bolum" id="paketler">
   <div class="wrap">
     <div class="page-heading">
-      <div><h2>Paketler</h2><p>Yılda birden fazla kermes yapıyorsanız yıllık paket, tek kermes yapıyorsanız bir aylık Normal paket. İlk kermesiniz bizden.</p></div>
+      <div><h2>Paketler</h2><p>Yılda birden fazla kermes yapıyorsanız yıllık paket, tek kermes yapıyorsanız bir aylık Normal ya da Pro. İlk kermesiniz bizden.</p></div>
     </div>
     <div class="paketler">
       <div class="panel paket">
@@ -375,13 +378,14 @@ footer a{color:var(--green);font-weight:600}
           <li>Genel menü QR'ı</li>
         </ul>
         <div class="paket-btnlar">
-          <a class="btn paket-btn" data-wa data-paket="Normal (yıllık)" href="#iletisim">Yıllık iste</a>
-          <a class="btn paket-btn" data-wa data-paket="Normal (tek kermes)" href="#iletisim">Tek kermes iste</a>
+          <a class="btn paket-btn" data-wa data-paket="Normal (yıllık)" href="#iletisim">Yıllık</a>
+          <a class="btn paket-btn" data-wa data-paket="Normal (tek kermes)" href="#iletisim">Tek kermes</a>
         </div>
       </div>
       <div class="panel paket paket-one">
         <div class="paket-bas"><h3>Pro</h3><span class="paket-kim">Masalı, garsonlu kermes</span></div>
         <div class="paket-fiyat"><strong>2.500 ₺</strong><span>/ yıl</span></div>
+        <div class="paket-tek"><strong>750 ₺</strong><span>tek kermes · 1 ay</span></div>
         <ul class="paket-liste">
           <li class="paket-ust">Normal'deki her şey</li>
           <li>Garson telefondan sipariş alır</li>
@@ -390,7 +394,10 @@ footer a{color:var(--green);font-weight:600}
           <li>QR'dan garson çağırma, sesli uyarı</li>
           <li>Masa QR kartlarını A4'e yazdırma</li>
         </ul>
-        <a class="btn primary paket-btn" data-wa data-paket="Pro" href="#iletisim">Pro paketi iste</a>
+        <div class="paket-btnlar">
+          <a class="btn primary paket-btn" data-wa data-paket="Pro (yıllık)" href="#iletisim">Yıllık</a>
+          <a class="btn paket-btn" data-wa data-paket="Pro (tek kermes)" href="#iletisim">Tek kermes</a>
+        </div>
       </div>
       <div class="panel paket">
         <div class="paket-bas"><h3>Premium</h3><span class="paket-kim">Masada çağrı butonu</span></div>
@@ -401,6 +408,18 @@ footer a{color:var(--green);font-weight:600}
           <li>Butona basınca çağrı garsonun ekranına düşer</li>
         </ul>
         <a class="btn paket-btn" data-wa data-paket="Premium" href="#iletisim">Premium paketi iste</a>
+      </div>
+      <div class="panel paket paket-kalici">
+        <div class="paket-bas"><h3>Kalıcı <span class="badge">yakında</span></h3><span class="paket-kim">Butonlar kurumunuzda kalır</span></div>
+        <div class="paket-fiyat"><strong class="paket-teklif">Teklifle</strong><span>masa sayınıza göre</span></div>
+        <ul class="paket-liste">
+          <li class="paket-ust">Premium'daki her şey</li>
+          <li>Çağrı butonları sizin olur, her kermeste kiralamanız gerekmez</li>
+          <li>Kutular kurumunuzun renginde</li>
+          <li>Logonuz ve adınızla buton etiketleri</li>
+          <li>Kurulumu biz yaparız</li>
+        </ul>
+        <a class="btn paket-btn" data-wa data-paket="Kalıcı sistem" href="#iletisim">Bilgi al</a>
       </div>
     </div>
     <p class="paket-not"><b>İlk kermesiniz bizden:</b> hangi paketi seçerseniz seçin ilk kermesinizde ücret ödemezsiniz. Hesap açılışı ve ödeme için WhatsApp'tan yazmanız yeterli.</p>
