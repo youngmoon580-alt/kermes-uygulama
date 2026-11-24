@@ -16,7 +16,7 @@
 <link rel="canonical" href="https://kermesdefterim.com/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Fredoka:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* Uygulamanın kendi renkleri ve ölçüleri */
 :root{
@@ -53,8 +53,7 @@ p{margin:0}
 .topbar{position:sticky;top:0;z-index:10;height:72px;background:rgba(255,255,255,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .topbar .wrap{height:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--green)}
-.brand-mark{display:grid;place-items:center;width:40px;height:40px;border-radius:13px;background:var(--green);color:#e3f0e9;font-size:21px}
-.brand-name{font:500 24px/1 "Fredoka","Nunito",sans-serif;letter-spacing:.2px}
+.brand-logo{display:block;height:30px;width:auto}
 .menu{display:flex;gap:6px;list-style:none;margin:0;padding:0}
 .menu a{display:block;text-decoration:none;color:#557068;font-weight:600;font-size:14px;padding:9px 12px;border-radius:10px}
 .menu a:hover{background:var(--mint);color:var(--green)}
@@ -226,7 +225,7 @@ footer a{color:var(--green);font-weight:600}
   .hero-cta .btn{flex:1 1 100%}
   .top-actions .btn span{display:none}
   .top-actions .btn{padding:11px}
-  .brand-name{font-size:21px}
+  .brand-logo{height:26px}
   .stat-value{font-size:24px}
   .bolum,.iletisim{padding-top:64px}
 }
@@ -240,7 +239,7 @@ footer a{color:var(--green);font-weight:600}
 
 <header class="topbar">
   <div class="wrap">
-    <a class="brand" href="#"><span class="brand-mark" aria-hidden="true">✳</span><span class="brand-name">Kermes Defterim</span></a>
+    <a class="brand" href="#"><img class="brand-logo" src="/img/logo-acik.svg" alt="Kermes Defterim" width="837" height="100"></a>
     <ul class="menu">
       <li><a href="#nasil">Nasıl çalışır</a></li>
       <li><a href="#neler">Neler var</a></li>
