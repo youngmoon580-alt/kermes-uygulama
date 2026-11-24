@@ -163,6 +163,12 @@ section{scroll-margin-top:84px}
 .paket-btn{justify-content:center;width:100%}
 .paket-btn:not(.primary){background:var(--mint);color:var(--green);border:1px solid transparent}
 .paket-not{color:var(--muted);font-size:14px;margin-top:16px}
+.paket-not b{color:var(--ink,#173a30)}
+.paket-tek{display:flex;align-items:baseline;gap:6px;margin-top:-6px;padding:8px 12px;border-radius:12px;background:var(--mint)}
+.paket-tek strong{font-family:Manrope,sans-serif;font-size:20px;font-weight:800;color:var(--green)}
+.paket-tek span{color:var(--muted);font-size:13px}
+.paket-btnlar{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.paket-btnlar .paket-btn{padding-left:8px;padding-right:8px}
 .ozellikler{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .ozellik{display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:start}
 .ozellik h3{font-size:16px;font-weight:700;margin-top:6px}
@@ -284,7 +290,7 @@ footer a{color:var(--green);font-weight:600}
       <div class="stat-card"><div class="stat-top">Görev ekranı<span class="stat-icon">♙</span></div><div class="stat-value">4</div><div class="stat-sub">Yönetici, garson, mutfak, kasa</div></div>
       <div class="stat-card"><div class="stat-top">Mutfak ekranı<span class="stat-icon">▣</span></div><div class="stat-value">~1,5 sn</div><div class="stat-sub">Yeni fişin ekrana düşme süresi</div></div>
       <div class="stat-card"><div class="stat-top">Tezgâh<span class="stat-icon">▤</span></div><div class="stat-value">3+</div><div class="stat-sub">Mutfak, içecek, tatlı; istediğiniz kadar</div></div>
-      <div class="stat-card"><div class="stat-top">Deneme<span class="stat-icon">✓</span></div><div class="stat-value">7 gün</div><div class="stat-sub">Ücretsiz, kart bilgisi istenmez</div></div>
+      <div class="stat-card"><div class="stat-top">İlk kermes<span class="stat-icon">✓</span></div><div class="stat-value">Bizden</div><div class="stat-sub">Ücretsiz, kart bilgisi istenmez</div></div>
     </div>
   </div>
 </section>
@@ -351,12 +357,13 @@ footer a{color:var(--green);font-weight:600}
 <section class="bolum" id="paketler">
   <div class="wrap">
     <div class="page-heading">
-      <div><h2>Paketler</h2><p>Fiyatlar yıllıktır. Paketinizi kermesinize göre seçin, sonra istediğiniz zaman değiştirin.</p></div>
+      <div><h2>Paketler</h2><p>Yılda birden fazla kermes yapıyorsanız yıllık paket, tek kermes yapıyorsanız bir aylık Normal paket. İlk kermesiniz bizden.</p></div>
     </div>
     <div class="paketler">
       <div class="panel paket">
         <div class="paket-bas"><h3>Normal</h3><span class="paket-kim">Masasız, kasadan satış</span></div>
         <div class="paket-fiyat"><strong>2.000 ₺</strong><span>/ yıl</span></div>
+        <div class="paket-tek"><strong>500 ₺</strong><span>tek kermes · 1 ay</span></div>
         <ul class="paket-liste">
           <li>Kasadan ürün seçerek satış</li>
           <li>Mutfak ve tezgâh fişleri</li>
@@ -367,7 +374,10 @@ footer a{color:var(--green);font-weight:600}
           <li>Satış raporu ve kermes sonu Excel'i</li>
           <li>Genel menü QR'ı</li>
         </ul>
-        <a class="btn paket-btn" data-wa data-paket="Normal" href="#iletisim">Normal paketi iste</a>
+        <div class="paket-btnlar">
+          <a class="btn paket-btn" data-wa data-paket="Normal (yıllık)" href="#iletisim">Yıllık iste</a>
+          <a class="btn paket-btn" data-wa data-paket="Normal (tek kermes)" href="#iletisim">Tek kermes iste</a>
+        </div>
       </div>
       <div class="panel paket paket-one">
         <div class="paket-bas"><h3>Pro</h3><span class="paket-kim">Masalı, garsonlu kermes</span></div>
@@ -393,7 +403,7 @@ footer a{color:var(--green);font-weight:600}
         <a class="btn paket-btn" data-wa data-paket="Premium" href="#iletisim">Premium paketi iste</a>
       </div>
     </div>
-    <p class="paket-not">Her pakette 7 gün ücretsiz deneme var. Ödeme ve hesap açılışı için WhatsApp'tan yazmanız yeterli.</p>
+    <p class="paket-not"><b>İlk kermesiniz bizden:</b> hangi paketi seçerseniz seçin ilk kermesinizde ücret ödemezsiniz. Hesap açılışı ve ödeme için WhatsApp'tan yazmanız yeterli.</p>
   </div>
 </section>
 
@@ -455,11 +465,11 @@ footer a{color:var(--green);font-weight:600}
     <div class="hero-art">
       <div class="hero-copy">
         <h2>Kermesiniz ne zaman? Hesabınızı hemen açalım.</h2>
-        <p>Paketinizi seçin, WhatsApp'tan yazın; deneme hesabınızı aynı gün açıp kermes kodunuzu gönderelim.</p>
+        <p>Paketinizi seçin, WhatsApp'tan yazın; hesabınızı aynı gün açıp kermes kodunuzu gönderelim. İlk kermesiniz ücretsiz.</p>
       </div>
       <div class="sag">
         <a class="btn on-green" data-wa href="#"><svg viewBox="0 0 24 24" aria-hidden="true" style="color:#1f9d55"><use href="#wa-ikon"/></svg>WhatsApp'tan yazın</a>
-        <div class="deneme"><b>7 gün</b>ücretsiz deneme</div>
+        <div class="deneme"><b>İlk kermesiniz</b>bizden</div>
       </div>
     </div>
   </div>
