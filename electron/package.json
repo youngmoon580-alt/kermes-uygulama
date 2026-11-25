@@ -1,7 +1,7 @@
 {
   "name": "kermes-defterim",
   "productName": "Kermes Defterim",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Kermes Defterim masaüstü uygulaması",
   "main": "main.js",
   "author": "Kermes Defterim",
@@ -20,7 +20,7 @@
     "productName": "Kermes Defterim",
     "artifactName": "Kermes-Defterim-Kurulum.${ext}",
     "directories": { "output": "dist", "buildResources": "build" },
-    "files": ["main.js", "package.json"],
+    "files": ["main.js", "preload.js", "package.json"],
     "win": {
       "target": [{ "target": "nsis", "arch": ["x64"] }],
       "icon": "build/icon.ico"

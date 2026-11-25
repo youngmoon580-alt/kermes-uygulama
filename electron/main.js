@@ -1,5 +1,6 @@
-const { app, BrowserWindow, shell, Menu } = require('electron');
+const { app, BrowserWindow, shell, Menu, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 const HOME = 'https://app.kermesdefterim.com/';
 const HOST = 'app.kermesdefterim.com';
@@ -28,7 +29,7 @@ function createWindow() {
     title: 'Kermes Defterim',
     icon: path.join(__dirname, 'build', 'icon.ico'),
     autoHideMenuBar: true,
-    webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true }
+    webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true, preload: path.join(__dirname, 'preload.js') }
   });
   Menu.setApplicationMenu(null);
   win.loadURL(HOME);
@@ -54,6 +55,19 @@ function createWindow() {
     if (input.type === 'keyDown' && input.key === 'F11') win.setFullScreen(!win.isFullScreen());
   });
 }
+
+// Sayfayı PDF'e çevirip bilgisayarın PDF görüntüleyicisinde açar (önizleme ve yazdır düğmesi orada).
+ipcMain.handle('pdf-yazdir', async (event, ad) => {
+  let host = '';
+  try { host = new URL(event.senderFrame.url).hostname; } catch (e) {}
+  if (host !== HOST) return { ok: false };
+  const data = await event.sender.printToPDF({ printBackground: true, preferCSSPageSize: true });
+  const temiz = String(ad || 'Kermes Defterim').replace(/[^\p{L}\p{N} _-]/gu, '').trim().slice(0, 60) || 'Kermes Defterim';
+  const dosya = path.join(app.getPath('temp'), `${temiz} ${Date.now()}.pdf`);
+  await fs.promises.writeFile(dosya, data);
+  const hata = await shell.openPath(dosya);
+  return { ok: !hata, hata };
+});
 
 app.on('second-instance', () => { if (win) { if (win.isMinimized()) win.restore(); win.focus(); } });
 app.whenReady().then(createWindow);
